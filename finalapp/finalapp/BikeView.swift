@@ -51,9 +51,10 @@ struct BikeView: View {
         request.setValue(xdate, forHTTPHeaderField: "x-date")
         request.setValue(authorization, forHTTPHeaderField: "Authorization")
         URLSession.shared.dataTask(with: request) { (data, response, error) in
-            if let data = data {
-                let content = String(data: data, encoding: .utf8) ?? ""
-                print(content)
+            let decoder = JSONDecoder()
+            if let data = data, let cResults = try?
+                decoder.decode([BikeInfo].self, from: data) {
+                self.bikes.append(contentsOf: cResults)
             }
         }.resume()
     }
